@@ -1,5 +1,8 @@
+import 'package:chatapp/helpers/mostrar_alertas.dart';
+import 'package:chatapp/services/auth_service.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -47,6 +50,7 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -71,7 +75,21 @@ class __FormState extends State<_Form> {
           ),
           ButtonBlue(
             text: 'Sign Up',
-            onPressed: () {},
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    final registerOk = await authService.register(
+                        emailCrtl.text.trim(),
+                        passCrtl.text.trim(),
+                        nameCrtl.text.trim());
+
+                    if (registerOk == true) {
+                      Navigator.pushReplacementNamed(context, 'users');
+                    } else {
+                      mostrarAlerta(
+                          context, 'Error en el registro', registerOk);
+                    }
+                  },
           )
         ],
       ),

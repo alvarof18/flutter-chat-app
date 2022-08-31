@@ -5,7 +5,7 @@ class ButtonBlue extends StatelessWidget {
       : super(key: key);
 
   final String text;
-  final Function() onPressed;
+  final Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return MaterialButton(

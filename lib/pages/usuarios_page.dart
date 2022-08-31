@@ -1,5 +1,7 @@
 import 'package:chatapp/models/users.dart';
+import 'package:chatapp/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -14,29 +16,35 @@ class _UsuariosPageState extends State<UsuariosPage> {
       RefreshController(initialRefresh: false);
 
   final usuarios = [
-    Users(name: 'Alvaro 1', email: 'alvaro1@gmail.com', online: true, uid: '1'),
-    Users(
-        name: 'Alvaro 2', email: 'alvarof2@gmail.com', online: true, uid: '2'),
-    Users(
-        name: 'Alvaro 3', email: 'alvarof3@gmail.com', online: true, uid: '3'),
-    Users(
-        name: 'Alvaro 4', email: 'alvarof4@gmail.com', online: false, uid: '4'),
-    Users(
-        name: 'Alvaro 5', email: 'alvarof5@gmail.com', online: false, uid: '5'),
+    Usuario(
+        nombre: 'Alvaro', email: 'alvaro1@gmail.com', online: true, uid: '1'),
+    Usuario(
+        nombre: 'Albanys',
+        email: 'albanys90@gmail.com',
+        online: true,
+        uid: '2'),
+    Usuario(nombre: 'Pedro', email: 'pedro@gmail.com', online: false, uid: '3'),
   ];
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(
-            'Mi nombre',
-            style: TextStyle(color: Colors.black54),
+          title: Text(
+            authService.usuario.nombre,
+            style: const TextStyle(color: Colors.black54),
           ),
           backgroundColor: Colors.white,
           elevation: 1,
           leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: Desconectar sockets server
+                authService.logout();
+                // Tambien se puede hacer
+                //AuthService.deleteToken();
+                Navigator.pushReplacementNamed(context, 'login');
+              },
               icon: const Icon(
                 Icons.exit_to_app_outlined,
                 color: Colors.black87,
@@ -75,13 +83,13 @@ class _UsuariosPageState extends State<UsuariosPage> {
     );
   }
 
-  ListTile _usersListTile(Users user) {
+  ListTile _usersListTile(Usuario user) {
     return ListTile(
-      title: Text(user.name),
+      title: Text(user.nombre),
       subtitle: Text(user.email),
       leading: CircleAvatar(
         backgroundColor: Colors.blue[100],
-        child: Text(user.name.substring(0, 2)),
+        child: Text(user.nombre.substring(0, 2)),
       ),
       trailing: Container(
         width: 10,
