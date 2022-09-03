@@ -1,5 +1,6 @@
 import 'package:chatapp/helpers/mostrar_alertas.dart';
 import 'package:chatapp/services/auth_service.dart';
+import 'package:chatapp/services/socket_service.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +52,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -84,6 +86,7 @@ class __FormState extends State<_Form> {
                         nameCrtl.text.trim());
 
                     if (registerOk == true) {
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'users');
                     } else {
                       mostrarAlerta(
